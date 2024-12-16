@@ -197,7 +197,7 @@ fun EntropyTableScreen() {
                 }
                 item {
                     Box(modifier = Modifier.width(columnWidths[5])){
-                        Text("${data!!.infoAvg}", modifier = Modifier.align(Alignment.Center))
+                        Text("${data!!.entropy}", modifier = Modifier.align(Alignment.Center))
                     }
                 }
             }

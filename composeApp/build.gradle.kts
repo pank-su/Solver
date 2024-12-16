@@ -1,6 +1,5 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.compose.reload.ComposeHotRun
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
+
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
@@ -12,7 +11,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinxSerialization)
-    alias(libs.plugins.hotReload)
+    //alias(libs.plugins.hotReload)
 }
 
 kotlin {
@@ -28,6 +27,9 @@ kotlin {
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         moduleName = "composeApp"
+        compilerOptions{
+            freeCompilerArgs.add("-Xwasm-debugger-custom-formatters")
+        }
         browser {
             val rootDirPath = project.rootDir.path
             val projectDirPath = project.projectDir.path
@@ -51,6 +53,9 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+        }
+
+        wasmJsMain.dependencies{
         }
 
         commonMain.dependencies {
@@ -92,6 +97,8 @@ kotlin {
             implementation(libs.multiplatform.settings)
             implementation(libs.multiplatform.settings.serialization)
             implementation(libs.multiplatform.settings.coroutines)
+            implementation(libs.multiplatform.settings.coroutines.to.observable)
+
 
 
 
@@ -132,9 +139,6 @@ android {
     }
 }
 
-dependencies {
-    debugImplementation(compose.uiTooling)
-}
 
 compose.desktop {
     application {
@@ -148,11 +152,11 @@ compose.desktop {
     }
 }
 
-composeCompiler {
-    featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
-}
-
-tasks.register<ComposeHotRun>("runHot") {
-    mainClass.set("su.pank.solver.MainKt")
-}
+//composeCompiler {
+//    featureFlags.add(ComposeFeatureFlag.OptimizeNonSkippingGroups)
+//}
+//
+//tasks.register<ComposeHotRun>("runHot") {
+//    mainClass.set("su.pank.solver.MainKt")
+//}
 

@@ -18,15 +18,17 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import su.pank.solver.ui.main.another_table.AnotherTable
+import su.pank.solver.ui.main.another_table.AnotherTableScreen
 import su.pank.solver.ui.main.entropy_table.EntropyTable
 import su.pank.solver.ui.main.entropy_table.EntropyTableScreen
 
-val screens = arrayOf(EntropyTable)
+val screens = arrayOf(EntropyTable, AnotherTable)
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun MainNavigation(fileName: String, fileText: String) {
-    var currentDestination by rememberSaveable {
+    var currentDestination: ScreenOfMain by rememberSaveable {
         mutableStateOf(EntropyTable)
     }
 
@@ -63,6 +65,9 @@ fun MainNavigation(fileName: String, fileText: String) {
                             when (currentDestination) {
                                 EntropyTable -> {
                                     EntropyTableScreen()
+                                }
+                                AnotherTable-> {
+                                    AnotherTableScreen()
                                 }
                             }
                         }

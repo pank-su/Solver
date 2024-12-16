@@ -14,6 +14,7 @@ import su.pank.solver.ui.theme.SolverTheme
 @Composable
 fun App() {
     SolverTheme {
+
         KoinApplication({
             modules(
                 uiModule,

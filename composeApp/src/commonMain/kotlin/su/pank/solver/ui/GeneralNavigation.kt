@@ -14,7 +14,6 @@ fun GeneralNavigation(){
     NavHost(navController, Main){
         composable<Main>{
             MainScreen()
-
         }
     }
 }

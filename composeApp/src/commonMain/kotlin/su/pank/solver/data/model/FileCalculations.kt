@@ -2,6 +2,8 @@ package su.pank.solver.data.model
 
 import androidx.annotation.FloatRange
 import kotlinx.serialization.Serializable
+import kotlin.math.ceil
+import kotlin.math.log2
 
 @Serializable
 data class FileCalculation(val hash: String, val symbols: List<Symbol>) {
@@ -12,8 +14,22 @@ data class FileCalculation(val hash: String, val symbols: List<Symbol>) {
         get() = symbols.sumOf { symbol -> symbol.probability.toDouble() }.toFloat()
 
 
-    val infoAvg: Float
+    val entropy: Float
         get() = symbols.sumOf { symbol -> symbol.probability.toDouble() * symbol.information }.toFloat()
+
+    // Разраядность
+    val capacity: Int
+        get() = ceil(entropyMax).toInt()
+
+    val entropyMax: Float
+        get() = log2(symbols.size.toFloat())
+
+    val absoluteRedundancy: Float
+        get() = entropyMax - entropy
+
+    val relativeRedundancy: Float
+        get() = (entropyMax - entropy) / entropyMax
+
 }
 
 @Serializable

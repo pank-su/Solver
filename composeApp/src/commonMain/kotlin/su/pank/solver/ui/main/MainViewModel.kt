@@ -12,9 +12,9 @@ import su.pank.solver.domain.ProbabilityTableUseCase
  * Состояние экрана
  */
 sealed interface MainState {
-    object FileNotPicked : MainState
+    data object FileNotPicked : MainState
 
-    object Loading : MainState
+    data object Loading : MainState
 
     data class PickedFile(val fileName: String, val fileText: String) : MainState
 }
