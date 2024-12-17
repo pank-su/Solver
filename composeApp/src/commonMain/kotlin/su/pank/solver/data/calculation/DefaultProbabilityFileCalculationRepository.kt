@@ -34,7 +34,7 @@ class DefaultProbabilityFileCalculationRepository(private val settings: Observab
 
     @OptIn(ExperimentalSettingsApi::class)
     override suspend fun addFileCalculation(probabilityFileCalculation: ProbabilityFileCalculation) {
-        settings["calculations"] = Json.encodeToString(
+        settings["calculations"] = json.encodeToString(
             json.decodeFromString<List<ProbabilityFileCalculation>>(
                 settings.getString(
                     "calculations",
