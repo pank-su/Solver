@@ -36,7 +36,7 @@ fun MainNavigation(fileName: String, fileText: String) {
         mutableStateOf(EntropyTable)
     }
 
-    var isNavigatedExtra by rememberSaveable{
+    var isNavigatedExtra by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -58,67 +58,77 @@ fun MainNavigation(fileName: String, fileText: String) {
 
             Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
                 CenterAlignedTopAppBar({ Text(fileName) }, actions = {
+                    if (false) // верну позже
                     IconButton(onClick = {
-                        if (isNavigatedExtra)
-                            navigator.navigateTo(SupportingPaneScaffoldRole.Main)
-                        else
-                            navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
-                        isNavigatedExtra = !isNavigatedExtra
-                    }) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowRight, null)
-                    }
+                         if (isNavigatedExtra)
+                             navigator.navigateTo(SupportingPaneScaffoldRole.Main)
+                         else
+                             navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+                         isNavigatedExtra = !isNavigatedExtra
+                     }) {
+                         Icon(Icons.AutoMirrored.Rounded.ArrowRight, null)
+                     }
                 })
             }) {
-                SupportingPaneScaffold(
-                    navigator.scaffoldDirective,
-                    navigator.scaffoldValue,
-                    mainPane = {
-                        AnimatedPane(Modifier.safeContentPadding()) {
-                            when (currentDestination) {
-                                EntropyTable -> {
-                                    EntropyTableScreen()
-                                }
-                                AnotherTable-> {
-                                    AnotherTableScreen()
-                                }
-                                ShanonFanoCoding -> {
-                                    ShanonFanoCodingScreen()
-                                }
-                                HuffmanCoding ->{
-                                    HuffmanCodingScreen()
+                if (false)
+                    SupportingPaneScaffold(
+                        navigator.scaffoldDirective,
+                        navigator.scaffoldValue,
+                        mainPane = {
+                            AnimatedPane(Modifier.safeContentPadding()) {}
+                        },
+                        supportingPane = {
+                            val scrollState = rememberScrollState()
+                            AnimatedPane(Modifier.safeContentPadding()) {
+                                Box(
+                                    Modifier.fillMaxSize().background(
+                                        MaterialTheme.colorScheme.surfaceVariant,
+                                        RoundedCornerShape(12.dp)
+                                    ).verticalScroll(scrollState)
+                                ) {
+                                    Text(fileText, modifier = Modifier.padding(10.dp))
                                 }
                             }
-                        }
-                    },
-                    supportingPane = {
-                        val scrollState = rememberScrollState()
-                        AnimatedPane(Modifier.safeContentPadding()) {
-                            Box(
-                                Modifier.fillMaxSize().background(
-                                    MaterialTheme.colorScheme.surfaceVariant,
-                                    RoundedCornerShape(12.dp)
-                                ).verticalScroll(scrollState)
-                            ) {
-                                Text(fileText, modifier = Modifier.padding(10.dp))
+
+                        }, extraPane = {
+                            val scrollState = rememberScrollState()
+
+                            AnimatedPane(Modifier.safeContentPadding()) {
+                                Box(
+                                    Modifier.fillMaxSize().background(
+                                        MaterialTheme.colorScheme.surfaceVariant,
+                                        RoundedCornerShape(12.dp)
+                                    ).verticalScroll(scrollState)
+                                ) {
+                                    Text(fileText, modifier = Modifier.padding(10.dp))
+                                }
                             }
+                        }, modifier = Modifier.padding(it).padding(16.dp)
+
+                    )
+
+
+                Box(modifier = Modifier.padding(it)) {
+                    when (currentDestination) {
+                        EntropyTable -> {
+                            EntropyTableScreen()
                         }
 
-                    }, extraPane = {
-                        val scrollState = rememberScrollState()
-
-                        AnimatedPane(Modifier.safeContentPadding()) {
-                            Box(
-                                Modifier.fillMaxSize().background(
-                                    MaterialTheme.colorScheme.surfaceVariant,
-                                    RoundedCornerShape(12.dp)
-                                ).verticalScroll(scrollState)
-                            ) {
-                                Text(fileText, modifier = Modifier.padding(10.dp))
-                            }
+                        AnotherTable -> {
+                            AnotherTableScreen()
                         }
-                    }, modifier = Modifier.padding(it).padding(16.dp)
 
-                )
+                        ShanonFanoCoding -> {
+                            ShanonFanoCodingScreen()
+                        }
+
+                        HuffmanCoding -> {
+                            HuffmanCodingScreen()
+                        }
+                    }
+                }
+
+
 
             }
         }

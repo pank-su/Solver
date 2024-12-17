@@ -3,6 +3,7 @@ package su.pank.solver.ui.main.shanon_fano
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
@@ -38,7 +39,7 @@ fun ShanonFanoCodingScreen() {
             OutlinedTextField(vm.message, {
                 vm.message = it
             }, placeholder = { Text("Введите сообщение") })
-            IconButton(onClick = {vm.encodeMessage()}){
+            IconButton(onClick = { vm.encodeMessage() }) {
                 Icon(Icons.Default.Done, null)
             }
         }
@@ -87,7 +88,10 @@ fun CodeTable(encoded: List<SymbolEncoded>, modifier: Modifier = Modifier) {
 
 @Composable
 fun RowScope.ShanonCodeCell(content: @Composable () -> Unit) {
-    Box(modifier = Modifier.weight(1f).height(60.dp).background(MaterialTheme.colorScheme.primaryContainer), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.weight(1f).height(60.dp).background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(12.dp)),
+        contentAlignment = Alignment.Center
+    ) {
         content()
     }
 }

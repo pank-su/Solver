@@ -25,6 +25,8 @@ class HuffmanCodingViewModel(private val huffmanCodingRepository: HuffmanCodingR
     var message: String by mutableStateOf("")
     var encodedMessage: String by mutableStateOf("")
 
+    var isGraphShowing: Boolean by mutableStateOf(false)
+
     fun encodeMessage() {
         currentJob?.cancel()
         currentJob = viewModelScope.launch {
