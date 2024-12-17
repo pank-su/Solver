@@ -5,14 +5,19 @@ import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.observable.makeObservable
 import org.koin.dsl.module
-import su.pank.solver.data.calculation.DefaultFileCalculationRepository
-import su.pank.solver.data.calculation.FileCalculationRepository
+import su.pank.solver.data.calculation.DefaultProbabilityFileCalculationRepository
+import su.pank.solver.data.calculation.ProbabilityFileCalculationRepository
+import su.pank.solver.data.fano.ShanonFanoCodingRepository
 
 @OptIn(ExperimentalSettingsApi::class)
 val dataModule = module {
-    single<FileCalculationRepository> {
-        DefaultFileCalculationRepository(get())
+    single<ProbabilityFileCalculationRepository> {
+        DefaultProbabilityFileCalculationRepository(get())
     }
     single<ObservableSettings> { Settings().makeObservable() // I FUCK ALL WORLD
      }
+
+    single {
+        ShanonFanoCodingRepository(get(), get(), get())
+    }
 }

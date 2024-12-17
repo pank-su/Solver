@@ -100,9 +100,10 @@ kotlin {
             implementation(libs.multiplatform.settings.coroutines.to.observable)
 
 
+        }
 
-
-
+        commonTest.dependencies{
+            implementation(libs.kotlin.test)
         }
 
         desktopMain.dependencies {

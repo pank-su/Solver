@@ -9,33 +9,33 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import su.pank.solver.data.model.FileCalculation
+import su.pank.solver.data.model.ProbabilityFileCalculation
 
-class DefaultFileCalculationRepository(private val settings: ObservableSettings) : FileCalculationRepository {
+class DefaultProbabilityFileCalculationRepository(private val settings: ObservableSettings) : ProbabilityFileCalculationRepository {
     @OptIn(ExperimentalSettingsApi::class)
-    override val fileCalculations: Flow<List<FileCalculation>> =
+    override val probabilityFileCalculations: Flow<List<ProbabilityFileCalculation>> =
         settings.getStringFlow("calculations", "[]").map { value ->
             Json.decodeFromString(value)
         }
 
-    private val _currentCalculation = MutableStateFlow<FileCalculation?>(null)
+    private val _currentCalculation = MutableStateFlow<ProbabilityFileCalculation?>(null)
 
-    override val currentCalculation: Flow<FileCalculation?> = _currentCalculation
+    override val currentCalculation: Flow<ProbabilityFileCalculation?> = _currentCalculation
 
 
-    override suspend fun setCurrentCalculation(calculation: FileCalculation) {
+    override suspend fun setCurrentCalculation(calculation: ProbabilityFileCalculation) {
         _currentCalculation.value = calculation
     }
 
     @OptIn(ExperimentalSettingsApi::class)
-    override suspend fun addFileCalculation(fileCalculation: FileCalculation) {
+    override suspend fun addFileCalculation(probabilityFileCalculation: ProbabilityFileCalculation) {
         settings["calculations"] = Json.encodeToString(
-            Json.decodeFromString<List<FileCalculation>>(
+            Json.decodeFromString<List<ProbabilityFileCalculation>>(
                 settings.getString(
                     "calculations",
                     "[]"
                 )
-            ) + fileCalculation
+            ) + probabilityFileCalculation
         )
 
     }

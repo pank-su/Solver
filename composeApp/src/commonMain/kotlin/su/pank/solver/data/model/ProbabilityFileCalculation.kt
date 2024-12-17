@@ -6,7 +6,7 @@ import kotlin.math.ceil
 import kotlin.math.log2
 
 @Serializable
-data class FileCalculation(val hash: String, val symbols: List<Symbol>) {
+data class ProbabilityFileCalculation(val hash: String, val symbols: List<Symbol>) {
     val symbolsCount: Int
         get() = symbols.sumOf { symbol -> symbol.occurrences }
 

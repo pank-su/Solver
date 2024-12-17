@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.shareIn
-import su.pank.solver.data.calculation.FileCalculationRepository
+import su.pank.solver.data.calculation.ProbabilityFileCalculationRepository
 
-class AnotherTableViewModel(private val fileCalculationRepository: FileCalculationRepository) : ViewModel() {
-    val data = fileCalculationRepository.currentCalculation.shareIn(
+class AnotherTableViewModel(private val probabilityFileCalculationRepository: ProbabilityFileCalculationRepository) : ViewModel() {
+    val data = probabilityFileCalculationRepository.currentCalculation.shareIn(
         viewModelScope,
         SharingStarted.Lazily, 1
     )

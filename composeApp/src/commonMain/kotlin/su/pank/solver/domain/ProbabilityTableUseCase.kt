@@ -4,16 +4,16 @@ import co.touchlab.kermit.Logger
 import io.github.vinceglb.filekit.core.PlatformFile
 import kotlinx.coroutines.flow.first
 import org.kotlincrypto.macs.hmac.sha2.HmacSHA256
-import su.pank.solver.data.calculation.FileCalculationRepository
-import su.pank.solver.data.model.FileCalculation
+import su.pank.solver.data.calculation.ProbabilityFileCalculationRepository
+import su.pank.solver.data.model.ProbabilityFileCalculation
 import su.pank.solver.data.model.Symbol
 import kotlin.math.log2
 
-class ProbabilityTableUseCase(private val fileCalculationRepository: FileCalculationRepository) {
+class ProbabilityTableUseCase(private val probabilityFileCalculationRepository: ProbabilityFileCalculationRepository) {
     val symbols = "0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюя .,:;-("
 
     @OptIn(ExperimentalStdlibApi::class)
-    suspend operator fun invoke(file: PlatformFile): FileCalculation {
+    suspend operator fun invoke(file: PlatformFile): ProbabilityFileCalculation {
         val bytesArray = file.readBytes()
         val hash = HmacSHA256(bytesArray).doFinal().toHexString()
 
@@ -21,9 +21,9 @@ class ProbabilityTableUseCase(private val fileCalculationRepository: FileCalcula
             "hash: $hash"
         )
 
-        fileCalculationRepository.fileCalculations.first().firstOrNull { calculation -> calculation.hash == hash }
+        probabilityFileCalculationRepository.probabilityFileCalculations.first().firstOrNull { calculation -> calculation.hash == hash }
             ?.let { calculation ->
-                fileCalculationRepository.setCurrentCalculation(calculation)
+                probabilityFileCalculationRepository.setCurrentCalculation(calculation)
                 return calculation
             }
 
@@ -41,13 +41,13 @@ class ProbabilityTableUseCase(private val fileCalculationRepository: FileCalcula
             val probality = symbol.occurrences / occurrencesSum.toFloat()
             symbol.copy(probability = probality, information = -log2(probality)) }
 
-        val calculation = FileCalculation(
+        val calculation = ProbabilityFileCalculation(
             hash,
             symbols
         )
 
-        fileCalculationRepository.addFileCalculation(calculation)
-        fileCalculationRepository.setCurrentCalculation(calculation)
+        probabilityFileCalculationRepository.addFileCalculation(calculation)
+        probabilityFileCalculationRepository.setCurrentCalculation(calculation)
         return calculation
     }
 }
