@@ -3,15 +3,18 @@ import su.pank.solver.domain.ShanonFanoCodingUseCase
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
+
+fun generateTestSymbols(vararg probabilities: Float) = buildList<Symbol> {
+    probabilities.forEachIndexed { index, probability ->
+        add(Symbol("$index"[0], 1, probability, 1f))
+    }
+}
+
+
 class ShanonFanoCodingTest {
 
     val shanonFanoCodingUseCase = ShanonFanoCodingUseCase()
 
-    fun generateTestSymbols(vararg probabilities: Float) = buildList<Symbol> {
-        probabilities.forEachIndexed { index, probability ->
-            add(Symbol("$index"[0], 1, probability, 1f))
-        }
-    }
 
     fun List<Symbol>.toProbabilities() = this.map { it.probability }
 

@@ -24,7 +24,7 @@ import su.pank.solver.ui.main.ScreenOfMain
 @Serializable
 object ShanonFanoCoding : ScreenOfMain {
     override val icon: ImageVector = Icons.Default.Code
-    override val label: String = "Кодирование Шеннона-Фано"
+    override val label: String = "Кодирование \nШеннона-Фано"
 }
 
 @Composable
