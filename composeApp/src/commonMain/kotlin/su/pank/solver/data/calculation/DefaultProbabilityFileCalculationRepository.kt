@@ -46,7 +46,7 @@ class DefaultProbabilityFileCalculationRepository(private val settings: Observab
     }
 
     init {
-        //settings.clear()
+        settings.clear()
     }
 
 

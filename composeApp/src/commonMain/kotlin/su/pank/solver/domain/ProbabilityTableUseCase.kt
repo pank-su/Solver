@@ -21,7 +21,8 @@ class ProbabilityTableUseCase(private val probabilityFileCalculationRepository: 
             "hash: $hash"
         )
 
-        probabilityFileCalculationRepository.probabilityFileCalculations.first().firstOrNull { calculation -> calculation.hash == hash }
+        probabilityFileCalculationRepository.probabilityFileCalculations.first()
+            .firstOrNull { calculation -> calculation.hash == hash }
             ?.let { calculation ->
                 probabilityFileCalculationRepository.setCurrentCalculation(calculation)
                 return calculation
@@ -39,7 +40,8 @@ class ProbabilityTableUseCase(private val probabilityFileCalculationRepository: 
 
         symbols = symbols.map { symbol ->
             val probality = symbol.occurrences / occurrencesSum.toFloat()
-            symbol.copy(probability = probality, information = -log2(probality)) }
+            symbol.copy(probability = probality, information = if (probality != 0f) -log2(probality) else 0f)
+        }
 
         val calculation = ProbabilityFileCalculation(
             hash,
