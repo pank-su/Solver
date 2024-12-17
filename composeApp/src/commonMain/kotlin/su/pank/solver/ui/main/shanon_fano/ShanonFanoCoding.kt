@@ -6,10 +6,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -36,11 +34,18 @@ fun ShanonFanoCodingScreen() {
     val scrollState = rememberScrollState()
 
     Column(modifier = Modifier.verticalScroll(scrollState)) {
-        OutlinedTextField(vm.message, {
-            vm.message = it
-        }, placeholder = { Text("Введите сообщение") })
+        Row {
+            OutlinedTextField(vm.message, {
+                vm.message = it
+            }, placeholder = { Text("Введите сообщение") })
+            IconButton(onClick = {vm.encodeMessage()}){
+                Icon(Icons.Default.Done, null)
+            }
+        }
+        Spacer(modifier = Modifier.height(50.dp))
+        Text(vm.encodedMessage)
+        Spacer(modifier = Modifier.height(50.dp))
 
-        Spacer(modifier = Modifier.height(100.dp))
         if (code == null) {
             CircularProgressIndicator()
         } else {
@@ -58,6 +63,9 @@ fun ShanonCodeTable(encoded: List<SymbolEncoded>, modifier: Modifier = Modifier)
                 Text("Символ")
             }
             ShanonCodeCell {
+                Text("p")
+            }
+            ShanonCodeCell {
                 Text("Код")
             }
         }
@@ -65,6 +73,9 @@ fun ShanonCodeTable(encoded: List<SymbolEncoded>, modifier: Modifier = Modifier)
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 ShanonCodeCell {
                     Text("${it.char}")
+                }
+                ShanonCodeCell {
+                    Text("${it.probability}")
                 }
                 ShanonCodeCell {
                     Text(it.code)

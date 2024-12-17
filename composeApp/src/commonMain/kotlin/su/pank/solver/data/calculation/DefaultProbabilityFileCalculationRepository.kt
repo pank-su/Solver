@@ -12,10 +12,15 @@ import kotlinx.serialization.json.Json
 import su.pank.solver.data.model.ProbabilityFileCalculation
 
 class DefaultProbabilityFileCalculationRepository(private val settings: ObservableSettings) : ProbabilityFileCalculationRepository {
+
+    val json = Json {
+        allowSpecialFloatingPointValues = true
+    }
+
     @OptIn(ExperimentalSettingsApi::class)
     override val probabilityFileCalculations: Flow<List<ProbabilityFileCalculation>> =
         settings.getStringFlow("calculations", "[]").map { value ->
-            Json.decodeFromString(value)
+            json.decodeFromString(value)
         }
 
     private val _currentCalculation = MutableStateFlow<ProbabilityFileCalculation?>(null)
@@ -30,7 +35,7 @@ class DefaultProbabilityFileCalculationRepository(private val settings: Observab
     @OptIn(ExperimentalSettingsApi::class)
     override suspend fun addFileCalculation(probabilityFileCalculation: ProbabilityFileCalculation) {
         settings["calculations"] = Json.encodeToString(
-            Json.decodeFromString<List<ProbabilityFileCalculation>>(
+            json.decodeFromString<List<ProbabilityFileCalculation>>(
                 settings.getString(
                     "calculations",
                     "[]"
@@ -41,7 +46,7 @@ class DefaultProbabilityFileCalculationRepository(private val settings: Observab
     }
 
     init {
-        settings.clear()
+        //settings.clear()
     }
 
 

@@ -32,10 +32,11 @@ class ShanonFanoCodingUseCase {
             sum += symbol.probability
             part1.add(symbol)
 
-        } while (abs(sum - probabilitySum) > accuracy && sum <= probabilitySum)
-//        if (sum - probabilitySum > accuracy){
-//            part1.removeLast()
-//        }
+        } while (abs(sum - probabilitySum) > accuracy && sum < probabilitySum)
+        if (sum - probabilitySum > accuracy && part1.size > 1){
+            part1.removeLastOrNull()
+            index--
+        }
         part2.addAll(symbols.subList(index, symbols.size))
 
 
@@ -46,7 +47,7 @@ class ShanonFanoCodingUseCase {
     fun shanonFano(symbols: List<Symbol>): List<SymbolEncoded> {
         val symbols = symbols.sortedByDescending { it.probability }
         val splitted = splitList(symbols)
-        return shanonFano(splitted.first, splitted.second)
+        return (shanonFano(splitted.first, splitted.second)).sortedByDescending { it.probability }
     }
 
     fun shanonFano(part1: List<Symbol>, part2: List<Symbol>, code: String = ""): List<SymbolEncoded> {
@@ -57,14 +58,14 @@ class ShanonFanoCodingUseCase {
             val splittedPart1 = splitList(part1)
             part1Encoded = shanonFano(splittedPart1.first, splittedPart1.second, code + "1")
         } else {
-            part1Encoded = listOf(SymbolEncoded(part1[0].char, code + "1"))
+            part1Encoded = listOf(SymbolEncoded(part1[0].char, code + "1", part1[0].probability))
         }
 
         if (part2.size != 1) {
             val splittedPart2 = splitList(part2)
             part2Encoded = shanonFano(splittedPart2.first, splittedPart2.second, code + "0")
         } else {
-            part2Encoded = listOf(SymbolEncoded(part2[0].char, code + "0"))
+            part2Encoded = listOf(SymbolEncoded(part2[0].char, code + "0", part2[0].probability))
         }
 
         return part1Encoded + part2Encoded
@@ -74,4 +75,4 @@ class ShanonFanoCodingUseCase {
 }
 
 @Serializable
-data class SymbolEncoded(val char: Char, val code: String)
+data class SymbolEncoded(val char: Char, val code: String, val probability: Float)
