@@ -32,6 +32,10 @@ fun MainNavigation(fileName: String, fileText: String) {
         mutableStateOf(EntropyTable)
     }
 
+    var isNavigatedExtra by rememberSaveable{
+        mutableStateOf(false)
+    }
+
     val coroutineScope = rememberCoroutineScope()
     NavigationSuiteScaffold(navigationSuiteItems = {
         screens.forEach { screen ->
@@ -51,7 +55,11 @@ fun MainNavigation(fileName: String, fileText: String) {
             Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
                 CenterAlignedTopAppBar({ Text(fileName) }, actions = {
                     IconButton(onClick = {
-                        navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+                        if (isNavigatedExtra)
+                            navigator.navigateTo(SupportingPaneScaffoldRole.Main)
+                        else
+                            navigator.navigateTo(SupportingPaneScaffoldRole.Extra)
+                        isNavigatedExtra = !isNavigatedExtra
                     }) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowRight, null)
                     }

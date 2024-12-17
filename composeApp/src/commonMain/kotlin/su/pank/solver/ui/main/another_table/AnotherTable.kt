@@ -35,7 +35,7 @@ fun AnotherTableScreen() {
     if (data == null)
         return
 
-    CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.headlineSmall.copy(textAlign = TextAlign.Center)) {
+    CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center)) {
 
         Column(
             Modifier.widthIn(max = 800.dp).clip(RoundedCornerShape(12.dp)).fillMaxWidth().padding(12.dp),
