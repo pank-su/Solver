@@ -41,7 +41,7 @@ class DefaultFileCalculationRepository(private val settings: ObservableSettings)
     }
 
     init {
-        //settings.clear()
+        settings.clear()
     }
 
 

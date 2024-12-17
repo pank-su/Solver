@@ -28,7 +28,7 @@ data class FileCalculation(val hash: String, val symbols: List<Symbol>) {
         get() = entropyMax - entropy
 
     val relativeRedundancy: Float
-        get() = (entropyMax - entropy) / entropyMax
+        get() = (absoluteRedundancy) / entropyMax
 
 }
 

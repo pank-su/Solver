@@ -10,7 +10,7 @@ import su.pank.solver.data.model.Symbol
 import kotlin.math.log2
 
 class ProbabilityTableUseCase(private val fileCalculationRepository: FileCalculationRepository) {
-    val symbols = "0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюя.,:;-()"
+    val symbols = "0123456789абвгдеёжзийклмнопрстуфхцчшщъыьэюя .,:;-("
 
     @OptIn(ExperimentalStdlibApi::class)
     suspend operator fun invoke(file: PlatformFile): FileCalculation {
