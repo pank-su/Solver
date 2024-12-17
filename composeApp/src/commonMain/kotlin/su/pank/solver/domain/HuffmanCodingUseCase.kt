@@ -5,8 +5,9 @@ import su.pank.solver.data.model.ProbabilityFileCalculation
 import su.pank.solver.data.model.Symbol
 
 class HuffmanCodingUseCase {
-    operator fun invoke(fileCalculation: ProbabilityFileCalculation) {
-        
+    operator fun invoke(fileCalculation: ProbabilityFileCalculation): HuffmanResult {
+        val result = huffmanTree(fileCalculation.symbols)
+        return HuffmanResult(fileCalculation.hash, result, result.toSymbolEncodeList())
     }
 
     fun huffmanTree(symbols: List<Symbol>): HuffmanSymbolEncode {
@@ -38,6 +39,13 @@ fun HuffmanSymbolEncode.toSymbolEncodeList(code: String = ""): List<SymbolEncode
 
 
 }
+
+@Serializable
+data class HuffmanResult(
+    val hash: String,
+    val graphData: HuffmanSymbolEncode,
+    val tableData: List<SymbolEncoded>
+)
 
 @Serializable
 data class HuffmanSymbolEncode(

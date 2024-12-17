@@ -49,14 +49,14 @@ fun ShanonFanoCodingScreen() {
         if (code == null) {
             CircularProgressIndicator()
         } else {
-            ShanonCodeTable(code!!.encodedSymbols)
+            CodeTable(code!!.encodedSymbols)
         }
 
     }
 }
 
 @Composable
-fun ShanonCodeTable(encoded: List<SymbolEncoded>, modifier: Modifier = Modifier) {
+fun CodeTable(encoded: List<SymbolEncoded>, modifier: Modifier = Modifier) {
     Column(modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             ShanonCodeCell {

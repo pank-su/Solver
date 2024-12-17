@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import su.pank.solver.data.calculation.DefaultProbabilityFileCalculationRepository
 import su.pank.solver.data.calculation.ProbabilityFileCalculationRepository
 import su.pank.solver.data.fano.ShanonFanoCodingRepository
+import su.pank.solver.data.huffman.HuffmanCodingRepository
 
 @OptIn(ExperimentalSettingsApi::class)
 val dataModule = module {
@@ -19,5 +20,8 @@ val dataModule = module {
 
     single {
         ShanonFanoCodingRepository(get(), get(), get())
+    }
+    single {
+        HuffmanCodingRepository(get(), get(), get())
     }
 }

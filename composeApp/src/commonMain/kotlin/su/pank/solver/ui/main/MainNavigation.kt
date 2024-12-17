@@ -22,10 +22,12 @@ import su.pank.solver.ui.main.another_table.AnotherTable
 import su.pank.solver.ui.main.another_table.AnotherTableScreen
 import su.pank.solver.ui.main.entropy_table.EntropyTable
 import su.pank.solver.ui.main.entropy_table.EntropyTableScreen
+import su.pank.solver.ui.main.huffman.HuffmanCoding
+import su.pank.solver.ui.main.huffman.HuffmanCodingScreen
 import su.pank.solver.ui.main.shanon_fano.ShanonFanoCoding
 import su.pank.solver.ui.main.shanon_fano.ShanonFanoCodingScreen
 
-val screens = arrayOf(EntropyTable, AnotherTable, ShanonFanoCoding)
+val screens = arrayOf(EntropyTable, AnotherTable, ShanonFanoCoding, HuffmanCoding)
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
@@ -81,6 +83,9 @@ fun MainNavigation(fileName: String, fileText: String) {
                                 }
                                 ShanonFanoCoding -> {
                                     ShanonFanoCodingScreen()
+                                }
+                                HuffmanCoding ->{
+                                    HuffmanCodingScreen()
                                 }
                             }
                         }

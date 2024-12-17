@@ -5,6 +5,7 @@ import org.koin.dsl.module
 import su.pank.solver.ui.main.MainViewModel
 import su.pank.solver.ui.main.another_table.AnotherTableViewModel
 import su.pank.solver.ui.main.entropy_table.EntropyTableViewModel
+import su.pank.solver.ui.main.huffman.HuffmanCodingViewModel
 import su.pank.solver.ui.main.shanon_fano.ShanonFanoCodingScreen
 import su.pank.solver.ui.main.shanon_fano.ShanonFanoCodingViewModel
 
@@ -20,5 +21,8 @@ val uiModule = module {
     }
     viewModel {
         ShanonFanoCodingViewModel(get())
+    }
+    viewModel{
+        HuffmanCodingViewModel(get())
     }
 }
