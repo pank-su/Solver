@@ -21,7 +21,7 @@ class AnotherTableViewModel(private val probabilityFileCalculationRepository: Pr
         val headers = ",Неопределённость,Разрядность кода,Абсолютная избыточность,Относительная избыточность"
 
         val rows = listOf(
-            "При кодировании сообщения стандартной кодовой таблицей ASCII,8 бит,8 бит,${8 - data.entropy},${(8 - data.entropy) / 8f}",
+            "При кодировании сообщения стандартной кодовой таблицей ASCII,7 бит,8 бит,${7 - data.entropy},${(7 - data.entropy) / 7f}",
             "\"При использовании равномерного кода, построенного на основе меры Хартли\",${data.entropyMax} бит,${data.capacity} бит,${data.absoluteRedundancy},${data.relativeRedundancy}"
         )
 

@@ -68,16 +68,16 @@ fun AnotherTableScreen() {
                     Text("При кодировании сообщения стандартной кодовой таблицей ASCII")
                 }
                 Cell {
-                    Text("8 бит")
+                    Text("7 бит")
                 }
                 Cell {
                     Text("8 бит")
                 }
                 Cell {
-                    Text("${8 - data!!.entropy}")
+                    Text("${7 - data!!.entropy}")
                 }
                 Cell {
-                    Text("${(8 - data!!.entropy) / 8f}")
+                    Text("${(7 - data!!.entropy) / 7f}")
                 }
             }
             Row(modifier = Modifier.height(120.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
