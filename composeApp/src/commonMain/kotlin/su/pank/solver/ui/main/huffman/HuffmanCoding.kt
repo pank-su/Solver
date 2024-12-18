@@ -2,6 +2,8 @@ package su.pank.solver.ui.main.huffman
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -24,10 +26,13 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.*
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import org.koin.compose.viewmodel.koinViewModel
+import su.pank.solver.domain.HuffmanStep
 import su.pank.solver.domain.HuffmanSymbolEncode
 import su.pank.solver.ui.main.ScreenOfMain
 import su.pank.solver.ui.main.shanon_fano.CodeTable
@@ -89,17 +94,60 @@ fun HuffmanCodingScreen() {
         Text(vm.encodedMessage)
         Spacer(modifier = Modifier.height(50.dp))
 
+
+        Button({
+            coroutineScope.launch {
+                launcher.launch(baseName = "decode_h", extension = "csv", bytes = vm.generateDecodeCSV().encodeToByteArray())
+            }
+        }){
+            Text("Скачать декодировку")
+        }
+        Button({
+            coroutineScope.launch {
+                launcher.launch(baseName = "huffman", extension = "csv", bytes = vm.generateCSV().encodeToByteArray())
+            }
+        }){
+            Text("Скачать таблицу")
+        }
         if (result == null) {
             CircularProgressIndicator()
         } else if (!vm.isGraphShowing) {
-            CodeTable(result!!.tableData)
+            Row {
+                CodeTable(result!!.tableData, modifier = Modifier.weight(1f).widthIn(max = 300.dp))
+                HuffmanProcessTable(result!!.steps, Modifier.weight(1f))
+            }
+            Text("Среднее число двоичных разрядов: ${result?.averageNumberOfBinaryDigits}")
+
         } else {
             HuffmanGraph(result!!.graphData)
         }
 
 
+
     }
 }
+
+@Composable
+fun HuffmanProcessTable(steps: List<HuffmanStep>, modifier: Modifier = Modifier) {
+    LazyRow(modifier, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        itemsIndexed(steps) { index, step ->
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Box(modifier = Modifier.size(55.dp, 60.dp), contentAlignment = Alignment.Center) {
+                    Text("${index + 1}", )
+                }
+                step.symbols.forEach {
+                    Box(modifier = Modifier.size(55.dp, 60.dp), contentAlignment = Alignment.Center) {
+                        Text("${ceil(it.probability * 10000f) / 10000f}", )
+                    }
+                }
+            }
+
+        }
+    }
+
+
+}
+
 
 @Composable
 fun HuffmanGraph(
@@ -107,6 +155,7 @@ fun HuffmanGraph(
     modifier: Modifier = Modifier.height(10000.dp).fillMaxWidth(),
 
     ) {
+
     val color = MaterialTheme.colorScheme.primary
     val scrollState = rememberScrollState()
     val textMeasurer = rememberTextMeasurer()
@@ -118,7 +167,7 @@ fun HuffmanGraph(
 }
 
 
-// Далее код писал не я
+// Далее код писал не я, а так называемый ИИ
 
 data class NodeLayout(
     val position: Offset,

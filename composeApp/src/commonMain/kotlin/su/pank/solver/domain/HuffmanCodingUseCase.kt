@@ -7,26 +7,31 @@ import su.pank.solver.data.model.Symbol
 class HuffmanCodingUseCase {
     operator fun invoke(fileCalculation: ProbabilityFileCalculation): HuffmanResult {
         val result = huffmanTree(fileCalculation.symbols)
-        return HuffmanResult(fileCalculation.hash, result, result.toSymbolEncodeList())
+        return HuffmanResult(fileCalculation.hash, result.first, result.first.toSymbolEncodeList(), result.second)
     }
 
-    fun huffmanTree(symbols: List<Symbol>): HuffmanSymbolEncode {
+    fun huffmanTree(symbols: List<Symbol>): Pair<HuffmanSymbolEncode, List<HuffmanStep>> {
         var symbols = symbols.map {
             HuffmanSymbolEncode(it.char, it.probability)
+        }.sortedByDescending {
+            it.probability
         }
+        val steps = mutableListOf(HuffmanStep(symbols))
         while (symbols.size != 1) {
-            symbols = symbols.sortedByDescending {
-                it.probability
-            }
             val lastTwoSymbols = symbols.takeLast(2)
 
-            symbols = symbols.dropLast(2) + HuffmanSymbolEncode(
+            symbols = (symbols.dropLast(2) + HuffmanSymbolEncode(
                 char = lastTwoSymbols[0].char,
                 probability = lastTwoSymbols[0].probability + lastTwoSymbols[1].probability,
                 childrenPair = Pair(lastTwoSymbols[0], lastTwoSymbols[1])
+            )).sortedByDescending {
+                it.probability
+            }
+            steps.add(
+                HuffmanStep(symbols)
             )
         }
-        return symbols[0]
+        return symbols[0] to steps
     }
 }
 
@@ -40,12 +45,21 @@ fun HuffmanSymbolEncode.toSymbolEncodeList(code: String = ""): List<SymbolEncode
 
 }
 
+
+@Serializable
+data class HuffmanStep(val symbols: List<HuffmanSymbolEncode>)
+
+
 @Serializable
 data class HuffmanResult(
     val hash: String,
     val graphData: HuffmanSymbolEncode,
-    val tableData: List<SymbolEncoded>
-)
+    val tableData: List<SymbolEncoded>,
+    val steps: List<HuffmanStep>
+){
+    val averageNumberOfBinaryDigits
+        get() = tableData.sumOf { it.code.length * it.probability.toDouble() }
+}
 
 @Serializable
 data class HuffmanSymbolEncode(
