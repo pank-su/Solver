@@ -11,10 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BackupTable
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +23,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import su.pank.solver.ui.main.ScreenOfMain
 
@@ -74,6 +73,10 @@ fun EntropyTableScreen() {
             }
         }
     }
+    val launcher = rememberFileSaverLauncher() { file ->
+        // Handle the saved file
+    }
+    val coroutineScope = rememberCoroutineScope()
 
     val rowHeight = 60.dp
     val columnWidths = listOf(50.dp, 80.dp, 80.dp, 80.dp, 200.dp, 200.dp)
@@ -86,6 +89,15 @@ fun EntropyTableScreen() {
                     RoundedCornerShape(12.dp)
                 )
             ) {
+                item {
+                    Button({
+                        coroutineScope.launch {
+                            launcher.launch(baseName = "entropy", extension = "csv", bytes = vm.generateCSV().encodeToByteArray())
+                        }
+                    }){
+                        Text("Скачать")
+                    }
+                }
                 item {
                     TableRow(nestedScrollConnection = connection) {
                         item {
