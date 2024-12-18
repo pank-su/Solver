@@ -53,9 +53,9 @@ class ShanonFanoCodingTest {
 
 
 
-        shanonFanoCodingUseCase.shanonFano(testData).forEach {
-            println(it.char + " " + it.code)
-        }
+//        shanonFanoCodingUseCase.shanonFano(testData).steps.forEach {
+//            println(it)
+//        }
 
     }
 }

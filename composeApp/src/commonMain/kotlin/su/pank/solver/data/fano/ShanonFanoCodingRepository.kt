@@ -4,41 +4,39 @@ import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.set
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import su.pank.solver.data.calculation.ProbabilityFileCalculationRepository
 import su.pank.solver.domain.ShanonFanoCodingUseCase
-import su.pank.solver.domain.SymbolEncoded
+import su.pank.solver.domain.ShanonFanoResult
 
 class ShanonFanoCodingRepository(
     private val probabilityFileCalculationRepository: ProbabilityFileCalculationRepository,
     private val settings: ObservableSettings,
     private val shanonFanoCodingUseCase: ShanonFanoCodingUseCase // FIXME: Не очень хорошо использовать use-case в репозитории
 ) {
+    private val key = "fano"
+
     val current = probabilityFileCalculationRepository.currentCalculation.filterNotNull().map { calculation ->
-        Json.decodeFromString<List<ShanonFanoCoding>>(settings.getString("fano", "[]")).firstOrNull {
-            it.hash == calculation.hash
-        }?.let {
+        Json.decodeFromString<Map<String, ShanonFanoResult>>(settings.getString(key, "{}"))[
+            calculation.hash
+        ]?.let {
             return@map it
         }
-        val encodedSymbols = shanonFanoCodingUseCase(calculation)
-        val rez = ShanonFanoCoding(calculation.hash, encodedSymbols)
-        add(rez)
-        return@map rez
+        val res = shanonFanoCodingUseCase(calculation)
+        add(calculation.hash, res)
+        return@map res
     }
 
-    suspend fun add(shanonFanoCoding: ShanonFanoCoding) {
-        settings["fano"] = Json.encodeToString(
-            Json.decodeFromString<List<ShanonFanoCoding>>(
+    suspend fun add(hash: String, shanonFanoResult: ShanonFanoResult) {
+        settings[key] = Json.encodeToString(
+            Json.decodeFromString<Map<String, ShanonFanoResult>>(
                 settings.getString(
-                    "fano",
-                    "[]"
+                    key,
+                    "{}"
                 )
             )
         )
     }
 }
 
-@Serializable
-data class ShanonFanoCoding(val hash: String, val encodedSymbols: List<SymbolEncoded>)

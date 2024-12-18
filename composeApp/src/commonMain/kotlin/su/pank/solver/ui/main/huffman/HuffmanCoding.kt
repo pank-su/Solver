@@ -26,8 +26,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import su.pank.solver.domain.HuffmanSymbolEncode
 import su.pank.solver.ui.main.ScreenOfMain
 import su.pank.solver.ui.main.shanon_fano.CodeTable
-import kotlin.math.exp
-import kotlin.math.floor
 
 @Serializable
 object HuffmanCoding : ScreenOfMain {
@@ -93,29 +91,52 @@ fun HuffmanGraph(
 }
 
 
+// Функция для подсчёта количества листовых узлов в поддереве
+fun HuffmanSymbolEncode.countLeaves(): Int = childrenPair?.let { (left, right) ->
+    left.countLeaves() + right.countLeaves()
+} ?: 1
+
 fun DrawScope.draw(
     huffmanSymbolEncode: HuffmanSymbolEncode,
     color: Color,
     textMeasurer: TextMeasurer,
     position: Offset = center.copy(y = size.minDimension / 100f),
-    step: Int = 1,
-
-    ) {
-val radius = size.minDimension / 30f / exp(step.toFloat() / 1.5f)
-    //drawText(textMeasurer, "${floor(huffmanSymbolEncode.probability * 1000f) / 1000f}", position.copy(y=position.y - radius * 4f,x = position.x - radius * 4f))
+    horizontalSpacing: Float = size.minDimension / 5f,
+    verticalSpacing: Float = size.minDimension / 10f
+) {
+    val radius = 5f
     drawCircle(color, radius, position)
-    huffmanSymbolEncode.childrenPair?.let {
-        val newAddition = (size.minDimension / exp(step.toFloat() / 1.5f)).coerceAtLeast(5f)
-        val rightPos = position.copy(position.x + newAddition / 2, position.y + newAddition)
-        val leftPos = rightPos.copy(position.x - newAddition / 2, position.y + newAddition)
 
-        drawLine(color, position, rightPos)
-        drawLine(color, position, leftPos)
+    huffmanSymbolEncode.childrenPair?.let { (left, right) ->
+        // Подсчитываем, сколько листьев в левом и правом поддереве
+        val leftLeaves = left.countLeaves()
+        val rightLeaves = right.countLeaves()
+        val totalLeaves = leftLeaves + rightLeaves
 
-        draw(it.first, color, textMeasurer, leftPos, step + 1)
-        draw(it.second, color, textMeasurer, rightPos, step + 1)
+        // Вычисляем горизонтальное расстояние, пропорциональное количеству листьев
+        val childSpacing = horizontalSpacing * totalLeaves
 
+        // Позиции для левого и правого потомка
+        val leftPos = position.copy(
+            x = position.x - (childSpacing * (leftLeaves.toFloat() / totalLeaves)),
+            y = position.y + verticalSpacing
+        )
+
+        val rightPos = position.copy(
+            x = position.x + (childSpacing * (rightLeaves.toFloat() / totalLeaves)),
+            y = position.y + verticalSpacing
+        )
+
+        // Рисуем связи к потомкам
+        drawLine(color, position, leftPos, strokeWidth = 2f)
+        drawLine(color, position, rightPos, strokeWidth = 2f)
+
+        // Рекурсивно рисуем поддеревья, уменьшая базовое горизонтальное расстояние
+        draw(left, color, textMeasurer, leftPos, horizontalSpacing / 2f, verticalSpacing)
+        draw(right, color, textMeasurer, rightPos, horizontalSpacing / 2f, verticalSpacing)
     } ?: run {
-        drawText(textMeasurer, "${huffmanSymbolEncode.char}", position)
+        // Если потомков нет, рисуем символ
+        //drawText(textMeasurer, "${huffmanSymbolEncode.char}", position)
     }
 }
+

@@ -6,17 +6,16 @@ import su.pank.solver.data.model.Symbol
 import kotlin.math.abs
 
 /**
- * Алгоритм Shanon'a Fano с сохранением расчётов
+ * Реализация алгоритма Шеннона-Фано с сохранением промежуточных шагов.
  */
 class ShanonFanoCodingUseCase {
-    operator fun invoke(probabilityFileCalculation: ProbabilityFileCalculation): List<SymbolEncoded> =
-        shanonFano(
-            probabilityFileCalculation.symbols
-        )
 
+    operator fun invoke(probabilityFileCalculation: ProbabilityFileCalculation): ShanonFanoResult {
+        return shanonFano(probabilityFileCalculation.symbols)
+    }
 
     /**
-     * Деление списка на две части по сумме вероятностей
+     * Деление списка символов на две части по сумме вероятностей.
      */
     internal fun splitList(symbols: List<Symbol>, accuracy: Float = 0.0001f): Pair<List<Symbol>, List<Symbol>> {
 
@@ -43,36 +42,110 @@ class ShanonFanoCodingUseCase {
         return Pair(part1, part2)
     }
 
-    // first-step
-    fun shanonFano(symbols: List<Symbol>): List<SymbolEncoded> {
-        val symbols = symbols.sortedByDescending { it.probability }
-        val splitted = splitList(symbols)
-        return (shanonFano(splitted.first, splitted.second)).sortedByDescending { it.probability }
+    /**
+     * Основной метод для кодирования Шеннона-Фано.
+     */
+    private fun shanonFano(symbols: List<Symbol>): ShanonFanoResult {
+        val sortedSymbols = symbols.sortedByDescending { it.probability }
+        val (part1, part2) = splitList(sortedSymbols)
+        return encodeShanonFano(part1, part2).sorted()
     }
 
-    fun shanonFano(part1: List<Symbol>, part2: List<Symbol>, code: String = ""): List<SymbolEncoded> {
-        val part1Encoded: List<SymbolEncoded>
-        val part2Encoded: List<SymbolEncoded>
+    /**
+     * Рекурсивный метод для кодирования.
+     */
+    private fun encodeShanonFano(
+        part1: List<Symbol>,
+        part2: List<Symbol>,
+        code: String = "",
+        steps: Set<ShanonStep> = emptySet()
+    ): ShanonFanoResult {
+        val steps = steps + ShanonStep(part1, part2)
 
-        if (part1.size != 1) {
-            val splittedPart1 = splitList(part1)
-            part1Encoded = shanonFano(splittedPart1.first, splittedPart1.second, code + "1")
+
+        val part1Encoded = if (part1.size != 1) {
+            val (split1, split2) = splitList(part1)
+            encodeShanonFano(split1, split2, code + "1", steps)
         } else {
-            part1Encoded = listOf(SymbolEncoded(part1[0].char, code + "1", part1[0].probability))
+            ShanonFanoResult(
+                listOf(SymbolEncoded(part1.first().char, code + "1", part1.first().probability)),
+                steps.toList()
+            )
         }
 
-        if (part2.size != 1) {
-            val splittedPart2 = splitList(part2)
-            part2Encoded = shanonFano(splittedPart2.first, splittedPart2.second, code + "0")
+        val part2Encoded = if (part2.size != 1) {
+            val (split1, split2) = splitList(part2)
+            encodeShanonFano(split1, split2, code + "0", steps)
         } else {
-            part2Encoded = listOf(SymbolEncoded(part2[0].char, code + "0", part2[0].probability))
+            ShanonFanoResult(
+                listOf(SymbolEncoded(part2.first().char, code + "0", part2.first().probability)),
+                steps.toList()
+            )
         }
 
-        return part1Encoded + part2Encoded
+
+        return (part1Encoded + part2Encoded)
     }
-
-
 }
 
+/**
+ * Результат кодирования Шеннона-Фано.
+ *
+ * @property encodedSymbols Список закодированных символов с их кодами и вероятностями.
+ * @property steps Список шагов деления списка символов на части.
+ */
+@Serializable
+data class ShanonFanoResult(
+    val encodedSymbols: List<SymbolEncoded>,
+    val steps: List<ShanonStep>
+) {
+
+    val averageNumberOfBinaryDigits
+        get() = encodedSymbols.sumOf { it.code.length * it.probability.toDouble() }
+
+    /**
+     * Объединяет текущий результат с другим результатом кодирования.
+     *
+     * @param other Другой результат кодирования.
+     * @return Новый результат, содержащий объединенные символы и шаги.
+     */
+    operator fun plus(other: ShanonFanoResult): ShanonFanoResult {
+        return ShanonFanoResult(
+            encodedSymbols + other.encodedSymbols,
+            steps + other.steps
+        )
+    }
+
+
+
+    /**
+     * Сортирует закодированные символы и шаги.
+     *
+     * @return Отсортированный результат кодирования.
+     */
+    fun sorted(): ShanonFanoResult {
+        return copy(
+            encodedSymbols = encodedSymbols,
+            steps = steps.distinct()
+        )
+    }
+}
+
+/**
+ * Шаг кодирования Шеннона-Фано.
+ *
+ * @property part1 Первая часть списка символов после деления.
+ * @property part2 Вторая часть списка символов после деления.
+ */
+@Serializable
+data class ShanonStep(val part1: List<Symbol>, val part2: List<Symbol>)
+
+/**
+ * Закодированный символ.
+ *
+ * @property char Символ.
+ * @property code Код символа.
+ * @property probability Вероятность символа.
+ */
 @Serializable
 data class SymbolEncoded(val char: Char, val code: String, val probability: Float)

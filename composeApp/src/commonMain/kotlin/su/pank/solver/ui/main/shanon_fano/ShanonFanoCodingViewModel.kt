@@ -31,4 +31,30 @@ class ShanonFanoCodingViewModel(shanonFanoCodingRepository: ShanonFanoCodingRepo
 
         }
     }
+
+    suspend fun generateCSV(): String = "Символ,p,Код\n" +
+            fanoCode.first().encodedSymbols.joinToString("\n") {
+                "\"${it.char}\",${it.probability},${it.code}"
+            }
+
+    suspend fun generateDecodeCSV(): String {
+        var result = "Шаг,Комбинация,Кол-во,Символ\n"
+        val symbolsEncoded = fanoCode.first().encodedSymbols
+        var str = ""
+        var step = 1
+        encodedMessage.forEach {
+            str += it
+            val symbolCounts = symbolsEncoded.count { it.code.startsWith(str) }
+            result += "${step++},$str,$symbolCounts,${
+                if (symbolCounts == 1) kotlin.run {
+                    val symbol = symbolsEncoded.first { it.code == str }.char; str = "";symbol
+                } else "-"
+            }\n"
+
+
+        }
+        return result
+
+    }
+
 }

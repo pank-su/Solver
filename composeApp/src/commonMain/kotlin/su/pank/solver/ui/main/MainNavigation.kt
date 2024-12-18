@@ -32,11 +32,11 @@ val screens = arrayOf(EntropyTable, AnotherTable, ShanonFanoCoding, HuffmanCodin
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun MainNavigation(fileName: String, fileText: String) {
-    var currentDestination: ScreenOfMain by rememberSaveable {
+    var currentDestination: ScreenOfMain by remember {
         mutableStateOf(EntropyTable)
     }
 
-    var isNavigatedExtra by rememberSaveable {
+    var isNavigatedExtra by remember {
         mutableStateOf(false)
     }
 
