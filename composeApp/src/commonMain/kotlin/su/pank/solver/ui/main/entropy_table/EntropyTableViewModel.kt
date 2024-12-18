@@ -19,7 +19,6 @@ class EntropyTableViewModel(private val probabilityFileCalculationRepository: Pr
 
 
     suspend fun generateCSV(): String {
-
             val data = data.filterNotNull().first()
             return buildString {
                 appendLine("№,Символ,Код символа,Число вхождения в текст,Вероятность,I")
@@ -30,8 +29,6 @@ class EntropyTableViewModel(private val probabilityFileCalculationRepository: Pr
                 appendLine(",,,Полная вероятность:,${data.probabilitySum},")
                 appendLine(",,,,Энтропия источника:,${data.entropy}")
             }
-
-
     }
 
 }

@@ -5,19 +5,19 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.TableView
+import androidx.compose.material3.Button
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 import su.pank.solver.ui.main.ScreenOfMain
 
@@ -34,6 +34,11 @@ fun AnotherTableScreen() {
     val data by viewModel.data.collectAsState(null)
     if (data == null)
         return
+
+    val launcher = rememberFileSaverLauncher { file ->
+        // Handle the saved file
+    }
+    val coroutineScope = rememberCoroutineScope()
 
     CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(textAlign = TextAlign.Center)) {
 
@@ -72,7 +77,7 @@ fun AnotherTableScreen() {
                     Text("${8 - data!!.entropy}")
                 }
                 Cell {
-                    Text("${(8 - data!!.entropy) /8f }")
+                    Text("${(8 - data!!.entropy) / 8f}")
                 }
             }
             Row(modifier = Modifier.height(120.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -91,6 +96,17 @@ fun AnotherTableScreen() {
                 Cell {
                     Text("${data!!.relativeRedundancy}")
                 }
+            }
+            Button(onClick = {
+                coroutineScope.launch {
+                    launcher.launch(
+                        baseName = "codings",
+                        extension = "csv",
+                        bytes = viewModel.generateCSV().encodeToByteArray()
+                    )
+                }
+            }) {
+                Text("Скачать")
             }
         }
     }
