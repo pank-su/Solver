@@ -1,18 +1,57 @@
-This is a Kotlin Multiplatform project targeting Android, Web, Desktop.
+# Решатель 7 лабораторной работы по информатике
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+Программа разработана на языке Kotlin с использованием фреймворка Compose Multiplatform.
 
+[Демо-версия](http://s.pank.su/)
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html),
-[Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform/#compose-multiplatform),
-[Kotlin/Wasm](https://kotl.in/wasm/)…
+## Структура проекта (чистая архитектура)
 
-We would appreciate your feedback on Compose/Web and Kotlin/Wasm in the public Slack channel [#compose-web](https://slack-chats.kotlinlang.org/c/compose-web).
-If you face any issues, please report them on [GitHub](https://github.com/JetBrains/compose-multiplatform/issues).
+### 1. **Слой данных (data)**
+Отвечает за кэширование вычислений и хранение данных.  
+[Исходный код](composeApp/src/commonMain/kotlin/su/pank/solver/data/)
 
-You can open the web application by running the `:composeApp:wasmJsBrowserDevelopmentRun` Gradle task.
+- **[calculation](composeApp/src/commonMain/kotlin/su/pank/solver/data/calculation/):** хранение вычислений для первой таблицы.
+- **[di](composeApp/src/commonMain/kotlin/su/pank/solver/data/di/):** настройки dependency injection.
+- **[fano](composeApp/src/commonMain/kotlin/su/pank/solver/data/fano/):** вычисления кодировки по Шеннону-Фано.
+- **[huffman](composeApp/src/commonMain/kotlin/su/pank/solver/data/huffman/):** вычисления кодировки по Хаффману.
+- **[model](composeApp/src/commonMain/kotlin/su/pank/solver/data/model/):** общие модели данных.
+
+---
+
+### 2. **Слой бизнес-логики (domain)**
+Содержит основные алгоритмы и вычисления.  
+[Исходный код](composeApp/src/commonMain/kotlin/su/pank/solver/domain/)
+
+- **[di](composeApp/src/commonMain/kotlin/su/pank/solver/domain/di/):** настройки dependency injection.
+- **[HuffmanCodingUseCase](composeApp/src/commonMain/kotlin/su/pank/solver/domain/HuffmanCodingUseCase.kt):** алгоритм кодировки по Хаффману.
+- **[ProbabilityTableUseCase](composeApp/src/commonMain/kotlin/su/pank/solver/domain/ProbabilityTableUseCase.kt):** расчёт вероятности и энтропии.
+- **[ShanonFanoCodingUseCase](composeApp/src/commonMain/kotlin/su/pank/solver/domain/ShanonFanoCodingUseCase.kt):** алгоритм кодировки по Шеннону-Фано.
+
+---
+
+### 3. **Слой пользовательского интерфейса (ui)**
+Реализован с использованием паттерна MVVM.  
+[Исходный код](composeApp/src/commonMain/kotlin/su/pank/solver/ui/)
+
+- **[di](composeApp/src/commonMain/kotlin/su/pank/solver/ui/di/):** настройки dependency injection.
+- **[main](composeApp/src/commonMain/kotlin/su/pank/solver/ui/main/):** главный экран.
+  - **[another_table](composeApp/src/commonMain/kotlin/su/pank/solver/ui/main/another_table/):** таблица сравнения ASCII.
+  - **[entropy_table](composeApp/src/commonMain/kotlin/su/pank/solver/ui/main/entropy_table/):** таблица вероятности и энтропии.
+  - **[huffman](composeApp/src/commonMain/kotlin/su/pank/solver/ui/main/huffman/):** отображение данных кодировки Хаффмана.
+  - **[shanon_fano](composeApp/src/commonMain/kotlin/su/pank/solver/ui/main/shanon_fano/):** отображение данных кодировки Шеннона-Фано.
+  - **[Main](composeApp/src/commonMain/kotlin/su/pank/solver/ui/main/Main.kt):** реализация главного экрана.
+  - **[MainNavigation](composeApp/src/commonMain/kotlin/su/pank/solver/ui/main/MainNavigation.kt):** навигация главного экрана.
+
+---
+
+## Известные проблемы
+
+1. В data-слое используются списки вместо словарей, что может снижать производительность.
+2. Слои `domain` и `data` не синхронизированы в одном потоке данных.
+3. Алгоритм построения графа частично разработан с помощью нейросети, что может повлиять на читаемость и предсказуемость кода.
+
+---
+
+### Описание
+
+Приложение предназначено для решения задач 7 лабораторной работы по информатике, включая кодирование данных алгоритмами Хаффмана и Шеннона-Фано, а также расчёт вероятности и энтропии.
