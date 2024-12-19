@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.*
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.*
 import io.github.vinceglb.filekit.compose.rememberFileSaverLauncher
 import kotlinx.coroutines.launch
@@ -122,8 +121,6 @@ fun HuffmanCodingScreen() {
             HuffmanGraph(result!!.graphData)
         }
 
-
-
     }
 }
 
@@ -167,8 +164,7 @@ fun HuffmanGraph(
 }
 
 
-// Далее код писал не я, а так называемый ИИ
-
+// Далее код писал не я, а так называемый ИИ, а именно код графа, который не пересекается
 data class NodeLayout(
     val position: Offset,
     val width: Float
@@ -262,13 +258,13 @@ fun DrawScope.drawHuffmanTree(
         drawLine(color, layout.position, leftPos, strokeWidth = 2f)
         drawLine(color, layout.position, rightPos, strokeWidth = 2f)
 
-        // Отрисовываем "0" на линии к левому потомку
+        // Отрисовываем "1" на линии к левому потомку
         val leftMid = Offset((layout.position.x + leftPos.x) / 2f, (layout.position.y + leftPos.y) / 2f)
-        drawText(textMeasurer, "0", leftMid.copy(y = leftMid.y - 10f))
+        drawText(textMeasurer, "1", leftMid.copy(y = leftMid.y - 10f))
 
-        // Отрисовываем "1" на линии к правому потомку
+        // Отрисовываем "0" на линии к правому потомку
         val rightMid = Offset((layout.position.x + rightPos.x) / 2f, (layout.position.y + rightPos.y) / 2f)
-        drawText(textMeasurer, "1", rightMid.copy(y = rightMid.y - 10f))
+        drawText(textMeasurer, "0", rightMid.copy(y = rightMid.y - 10f))
 
         // Рекурсивно рисуем поддеревья
         drawHuffmanTree(left, color, textMeasurer, NodeLayout(leftPos, leftW), verticalSpacing, nodeGap)

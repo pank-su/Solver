@@ -71,7 +71,7 @@ fun AnotherTableScreen() {
                     Text("7 бит")
                 }
                 Cell {
-                    Text("8 бит")
+                    Text("7 бит")
                 }
                 Cell {
                     Text("${7 - data!!.entropy}")

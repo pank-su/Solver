@@ -49,8 +49,10 @@ class HuffmanCodingViewModel(private val huffmanCodingRepository: HuffmanCodingR
         val symbolsEncoded = this.result.first().tableData
         var str = ""
         var step = 1
+        val minimumSize = symbolsEncoded.minOf { it.code.length }
         encodedMessage.forEach {
             str += it
+            if (str.length < minimumSize) return@forEach
             val symbolCounts = symbolsEncoded.count { it.code.startsWith(str) }
             result += "${step++},$str,$symbolCounts,${
                 if (symbolCounts == 1) kotlin.run {

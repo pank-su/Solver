@@ -20,10 +20,12 @@ class HuffmanCodingUseCase {
         while (symbols.size != 1) {
             val lastTwoSymbols = symbols.takeLast(2)
 
+            println(lastTwoSymbols)
+
             symbols = (symbols.dropLast(2) + HuffmanSymbolEncode(
-                char = lastTwoSymbols[0].char,
+                char = lastTwoSymbols[1].char,
                 probability = lastTwoSymbols[0].probability + lastTwoSymbols[1].probability,
-                childrenPair = Pair(lastTwoSymbols[0], lastTwoSymbols[1])
+                childrenPair = Pair(lastTwoSymbols[1], lastTwoSymbols[0])
             )).sortedByDescending {
                 it.probability
             }
@@ -37,12 +39,9 @@ class HuffmanCodingUseCase {
 
 // Получение таблицы символов
 fun HuffmanSymbolEncode.toSymbolEncodeList(code: String = ""): List<SymbolEncoded> {
-
     return this.childrenPair?.let {
         it.first.toSymbolEncodeList(code + "1") + it.second.toSymbolEncodeList(code + "0")
     } ?: listOf(SymbolEncoded(this.char, code, probability))
-
-
 }
 
 
