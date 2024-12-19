@@ -15,8 +15,9 @@ val dataModule = module {
     single<ProbabilityFileCalculationRepository> {
         DefaultProbabilityFileCalculationRepository(get())
     }
-    single<ObservableSettings> { Settings().makeObservable() // I FUCK ALL WORLD
-     }
+    single<ObservableSettings> {
+        Settings().makeObservable()
+    }
 
     single {
         ShanonFanoCodingRepository(get(), get(), get())
