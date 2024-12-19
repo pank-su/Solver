@@ -4,13 +4,19 @@ import kotlinx.serialization.Serializable
 import su.pank.solver.data.model.ProbabilityFileCalculation
 import su.pank.solver.data.model.Symbol
 
+/**
+ * Кодировка по Хаффману
+ */
 class HuffmanCodingUseCase {
+
     operator fun invoke(fileCalculation: ProbabilityFileCalculation): HuffmanResult {
         val result = huffmanTree(fileCalculation.symbols)
         return HuffmanResult(fileCalculation.hash, result.first, result.first.toSymbolEncodeList(), result.second)
     }
 
+    // Главная функция постройки дереве
     fun huffmanTree(symbols: List<Symbol>): Pair<HuffmanSymbolEncode, List<HuffmanStep>> {
+        // Преобразование в символы Хаффмана и сортируем
         var symbols = symbols.map {
             HuffmanSymbolEncode(it.char, it.probability)
         }.sortedByDescending {
@@ -18,9 +24,9 @@ class HuffmanCodingUseCase {
         }
         val steps = mutableListOf(HuffmanStep(symbols))
         while (symbols.size != 1) {
-            val lastTwoSymbols = symbols.takeLast(2)
+            // Берём два последних символа складываем и указываем как дочерние
 
-            println(lastTwoSymbols)
+            val lastTwoSymbols = symbols.takeLast(2)
 
             symbols = (symbols.dropLast(2) + HuffmanSymbolEncode(
                 char = lastTwoSymbols[1].char,
@@ -45,10 +51,12 @@ fun HuffmanSymbolEncode.toSymbolEncodeList(code: String = ""): List<SymbolEncode
 }
 
 
+// Шаг Хаффмана
 @Serializable
 data class HuffmanStep(val symbols: List<HuffmanSymbolEncode>)
 
 
+// Общий результат по файлу
 @Serializable
 data class HuffmanResult(
     val hash: String,
@@ -60,6 +68,7 @@ data class HuffmanResult(
         get() = tableData.sumOf { it.code.length * it.probability.toDouble() }
 }
 
+// Зашифровоанный символ по Хаффману
 @Serializable
 data class HuffmanSymbolEncode(
     val char: Char,

@@ -10,6 +10,9 @@ import su.pank.solver.data.calculation.ProbabilityFileCalculationRepository
 import su.pank.solver.domain.ShanonFanoCodingUseCase
 import su.pank.solver.domain.ShanonFanoResult
 
+/**
+ * Хранение вычислений по Фано
+ */
 class ShanonFanoCodingRepository(
     private val probabilityFileCalculationRepository: ProbabilityFileCalculationRepository,
     private val settings: ObservableSettings,

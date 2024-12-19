@@ -42,8 +42,12 @@ class ShanonFanoCodingViewModel(shanonFanoCodingRepository: ShanonFanoCodingRepo
         val symbolsEncoded = fanoCode.first().encodedSymbols
         var str = ""
         var step = 1
+        val minimumSize = symbolsEncoded.minOf { it.code.length }
+
         encodedMessage.forEach {
             str += it
+            if (str.length < minimumSize) return@forEach
+
             val symbolCounts = symbolsEncoded.count { it.code.startsWith(str) }
             result += "${step++},$str,$symbolCounts,${
                 if (symbolCounts == 1) kotlin.run {

@@ -11,6 +11,9 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import su.pank.solver.data.model.ProbabilityFileCalculation
 
+/**
+ * Сохранение расчёта вероятности по hash'у файла
+ */
 class DefaultProbabilityFileCalculationRepository(private val settings: ObservableSettings) : ProbabilityFileCalculationRepository {
 
     val json = Json {
@@ -23,16 +26,24 @@ class DefaultProbabilityFileCalculationRepository(private val settings: Observab
             json.decodeFromString(value)
         }
 
+    /**
+     * Текущий выбранный файл
+     */
     private val _currentCalculation = MutableStateFlow<ProbabilityFileCalculation?>(null)
 
     override val currentCalculation: Flow<ProbabilityFileCalculation?> = _currentCalculation
 
 
+    /**
+     * Выбор текущего файла
+     */
     override suspend fun setCurrentCalculation(calculation: ProbabilityFileCalculation) {
         _currentCalculation.value = calculation
     }
 
-    @OptIn(ExperimentalSettingsApi::class)
+    /**
+     * Добавление нового файла
+     */
     override suspend fun addFileCalculation(probabilityFileCalculation: ProbabilityFileCalculation) {
         settings["calculations"] = json.encodeToString(
             json.decodeFromString<List<ProbabilityFileCalculation>>(
@@ -44,10 +55,4 @@ class DefaultProbabilityFileCalculationRepository(private val settings: Observab
         )
 
     }
-
-    init {
-        settings.clear()
-    }
-
-
 }

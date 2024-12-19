@@ -4,6 +4,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import su.pank.solver.data.model.ProbabilityFileCalculation
 
+
+/**
+ * Поддельный репозиторий для тестирования приложения
+ */
 class FakeProbabilityFileCalculationRepository: ProbabilityFileCalculationRepository {
     override val probabilityFileCalculations: Flow<List<ProbabilityFileCalculation>> = flow {
         emit(emptyList())

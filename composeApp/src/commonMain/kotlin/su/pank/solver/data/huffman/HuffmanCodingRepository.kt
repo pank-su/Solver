@@ -10,6 +10,9 @@ import su.pank.solver.data.calculation.ProbabilityFileCalculationRepository
 import su.pank.solver.domain.HuffmanCodingUseCase
 import su.pank.solver.domain.HuffmanResult
 
+/**
+ * Хранение вычислений по Хаффману
+ */
 class HuffmanCodingRepository(
     private val probabilityFileCalculationRepository: ProbabilityFileCalculationRepository,
     private val huffmanCodingUseCase: HuffmanCodingUseCase,

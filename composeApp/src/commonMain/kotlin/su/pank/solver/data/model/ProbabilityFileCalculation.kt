@@ -7,31 +7,39 @@ import kotlin.math.log2
 
 @Serializable
 data class ProbabilityFileCalculation(val hash: String, val symbols: List<Symbol>) {
+    // Количество символов
     val symbolsCount: Int
         get() = symbols.sumOf { symbol -> symbol.occurrences }
 
+    // Сумма вероятности
     val probabilitySum: Float
         get() = symbols.sumOf { symbol -> symbol.probability.toDouble() }.toFloat()
 
-
+    // Энтропия
     val entropy: Float
         get() = symbols.sumOf { symbol -> symbol.probability.toDouble() * symbol.information }.toFloat()
 
-    // Разраядность
+    // Разрядность
     val capacity: Int
         get() = ceil(entropyMax).toInt()
 
+    // Максимальная энтропия (равновероятные события)
     val entropyMax: Float
         get() = log2(symbols.size.toFloat())
 
+    // Абсолютная
     val absoluteRedundancy: Float
         get() = entropyMax - entropy
 
+    // Относительная
     val relativeRedundancy: Float
         get() = (absoluteRedundancy) / entropyMax
 
 }
 
+/**
+ * Символ
+ */
 @Serializable
 data class Symbol(
     val char: Char,
